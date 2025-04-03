@@ -6,13 +6,13 @@ body {
   justify-content: center;
   align-items: center;
   height: 130vh;
-  background-color: #f4f4f4;
+  background: #f4f4f4;
 }
 
 .form-box {
-  background-color: white;
+  background: #fff;
   border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
   padding: 20px;
   width: 1000px;
   max-width: 90%;
@@ -58,54 +58,43 @@ textarea {
   flex: 1;
 }
 
-.course button {
-  background-color: red;
-  color: white;
+.course button,
+#addCourseButton,
+button[type="submit"] {
   border: none;
   border-radius: 5px;
   cursor: pointer;
+  transition: transform 0.2s ease-in-out;
+}
+
+.course button {
+  background: red;
+  color: #fff;
   font-size: 14px;
   height: 36px;
   width: 36px;
   display: flex;
   justify-content: center;
   align-items: center;
-  transition: transform 0.2s ease-in-out, opacity 0.2s ease-in-out;
 }
 
-.course button:hover {
-  transform: scale(1.2);
+.course button:hover,
+#addCourseButton:hover,
+button[type="submit"]:hover {
+  transform: scale(1.1);
   opacity: 0.8;
 }
 
 #addCourseButton {
-  background-color: green;
-  color: white;
-  border: none;
-  cursor: pointer;
-  padding: 10px 15px;
-  border-radius: 5px;
+  background: green;
+  color: #fff;
   margin-top: 15px;
-  transition: transform 0.2s ease-in-out;
-}
-
-#addCourseButton:hover {
-  transform: scale(1.1);
 }
 
 button[type="submit"] {
-  background-color: blue;
-  color: white;
-  border: none;
-  cursor: pointer;
-  padding: 10px 15px;
-  border-radius: 5px;
+  background: blue;
+  color: #fff;
   margin-top: 20px;
-  transition: transform 0.2s ease-in-out;
-}
-
-button[type="submit"]:hover {
-  transform: scale(1.1);
 }
 
 .semester {
@@ -123,7 +112,6 @@ h3 {
 
 .logo {
   max-width: 150px;
-  height: auto;
   margin: 0 auto 20px;
   display: block;
 }

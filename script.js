@@ -1,205 +1,194 @@
-// script.js MODIFICADO para validar campos requeridos antes de guardar
-
 const coursesContainer = document.getElementById("coursesContainer");
-const planEstudioSection = coursesContainer.closest(".plan-estudio") || coursesContainer.parentElement;
-const durationInput = document.getElementById("duracionPrograma");
-const globalAddCourseButton = document.getElementById("addCourseButton");
-const creditosDisplay = document.createElement("p");
+const planEstudio = coursesContainer.closest(".plan-estudio") || coursesContainer.parentElement;
+const duracionInput = document.getElementById("duracionPrograma");
+const addCourseBtn = document.getElementById("addCourseButton");
 
-creditosDisplay.id = "totalCreditosDisplay";
-creditosDisplay.style.marginTop = "20px";
-creditosDisplay.style.fontWeight = "bold";
-creditosDisplay.innerHTML = "<strong>Créditos Totales:</strong> 0";
-
-const finishSemesterButton = document.createElement("button");
-
-// Ocultar plan de estudio al inicio
-planEstudioSection.style.display = "none";
-if (globalAddCourseButton) globalAddCourseButton.style.display = "none";
-
-finishSemesterButton.id = "finishSemesterButton";
-finishSemesterButton.textContent = "Finalizar Semestre";
-finishSemesterButton.style.backgroundColor = "orange";
-finishSemesterButton.style.color = "white";
-finishSemesterButton.style.border = "none";
-finishSemesterButton.style.padding = "10px 15px";
-finishSemesterButton.style.borderRadius = "5px";
-finishSemesterButton.style.marginTop = "15px";
-finishSemesterButton.style.cursor = "pointer";
-finishSemesterButton.style.transition = "transform 0.2s ease-in-out";
-
-let currentSemester = 1;
-let totalSemesters = 0;
-
-// Captura la duración total del programa
-durationInput.addEventListener("change", () => {
-  totalSemesters = parseInt(durationInput.value, 10);
-  currentSemester = 1;
-  coursesContainer.innerHTML = "";
-  planEstudioSection.style.display = "block";
-  addSemesterSection();
-  coursesContainer.after(finishSemesterButton);
-  planEstudioSection.appendChild(creditosDisplay);
+const creditosDisplay = Object.assign(document.createElement("p"), {
+  id: "totalCreditosDisplay",
+  style: "margin-top:20px;font-weight:bold",
+  innerHTML: "<strong>Créditos Totales:</strong> 0"
+});
+const finishBtn = Object.assign(document.createElement("button"), {
+  id: "finishSemesterButton",
+  textContent: "Finalizar Semestre",
+  style: "background:orange;color:white;border:none;padding:10px 15px;border-radius:5px;margin-top:15px;cursor:pointer;transition:transform .2s ease-in-out"
 });
 
-function addSemesterSection() {
-  if (currentSemester > totalSemesters) {
-    alert("Has finalizado el ingreso de cursos.");
-    finishSemesterButton.style.display = "none";
-    return;
+let current = 1, total = 0;
+
+planEstudio.style.display = "none";
+if (addCourseBtn) addCourseBtn.style.display = "none";
+
+duracionInput.addEventListener("change", () => {
+  const nuevaCantidad = parseInt(duracionInput.value, 10);
+  const actuales = document.querySelectorAll(".semester").length;
+
+  // Mostrar sección y controles si aún están ocultos
+  planEstudio.style.display = "block";
+  if (!document.getElementById("finishSemesterButton")) {
+    coursesContainer.after(finishBtn);
+    planEstudio.appendChild(creditosDisplay);
   }
 
-  const semesterDiv = document.createElement("div");
-  semesterDiv.classList.add("semester");
-  semesterDiv.dataset.semester = currentSemester;
-  semesterDiv.innerHTML = `<h3>Semestre ${currentSemester}</h3>`;
+  // Si hay más actuales de los deseados → eliminar extras
+  if (actuales > nuevaCantidad) {
+    for (let i = actuales; i > nuevaCantidad; i--) {
+      const sem = document.querySelector(`.semester[data-semester="${i}"]`);
+      if (sem) sem.remove();
+    }
+  }
 
-  const addBtn = document.createElement("button");
-  addBtn.textContent = "+ Agregar Curso";
-  addBtn.classList.add("add-local-button");
-  addBtn.style.backgroundColor = "green";
-  addBtn.style.color = "white";
-  addBtn.style.border = "none";
-  addBtn.style.padding = "10px 15px";
-  addBtn.style.borderRadius = "5px";
-  addBtn.style.marginTop = "10px";
-  addBtn.style.cursor = "pointer";
-  addBtn.style.transition = "transform 0.2s ease-in-out";
+  // Si hay menos actuales de los deseados → agregar faltantes
+  if (actuales < nuevaCantidad) {
+    for (let i = actuales + 1; i <= nuevaCantidad; i++) {
+      addSemester(i);
+    }
+  }
 
-  addBtn.addEventListener("click", () => {
-    addCourseToSemester(semesterDiv);
-  });
+  total = nuevaCantidad;
+});
 
-  semesterDiv.appendChild(addBtn);
-  coursesContainer.appendChild(semesterDiv);
+
+function addSemester(num) {
+  const semDiv = document.createElement("div");
+  semDiv.className = "semester";
+  semDiv.dataset.semester = num;
+  semDiv.innerHTML = `<h3>Semestre ${num}</h3>`;
+
+  const btn = document.createElement("button");
+  btn.textContent = "+ Agregar Curso";
+  btn.className = "add-local-button";
+  btn.style = "background:green;color:white;border:none;padding:10px 15px;border-radius:5px;margin-top:10px;cursor:pointer;transition:transform .2s ease-in-out";
+  btn.onclick = () => addCourse(semDiv);
+
+  semDiv.appendChild(btn);
+  coursesContainer.appendChild(semDiv);
 }
 
-function addCourseToSemester(semesterDiv) {
+
+
+function addCourse(semDiv) {
   const courseDiv = document.createElement("div");
-  courseDiv.classList.add("course");
+  courseDiv.className = "course";
   courseDiv.innerHTML = `
     <input type="text" name="courseName[]" placeholder="Nombre del Curso" required>
     <input type="number" name="courseCredits[]" placeholder="Créditos" min="1" required>
     <button type="button" class="removeCourseButton">X</button>`;
 
   const creditInput = courseDiv.querySelector("[name='courseCredits[]']");
-  creditInput.addEventListener("input", updateTotalCredits);
+  creditInput.addEventListener("input", updateCreditos);
+    
 
-  courseDiv.querySelector(".removeCourseButton").addEventListener("click", () => {
-    const parentSemesterDiv = courseDiv.closest(".semester");
+  courseDiv.querySelector(".removeCourseButton").onclick = () => {
+    const parent = courseDiv.closest(".semester");
     courseDiv.remove();
-    updateTotalCredits();
-
-    const remainingCourses = parentSemesterDiv.querySelectorAll(".course");
-
-    if (remainingCourses.length === 0) {
-      parentSemesterDiv.remove();
+  
+    // ⚠️ Esto asegura que recalculas sin créditos fantasmas
+    updateCreditos();
+  
+    if (!parent.querySelectorAll(".course").length) {
+      parent.remove();
       reindexSemesters();
-      if (document.querySelectorAll(".semester").length < totalSemesters) {
-        finishSemesterButton.style.display = "inline-block";
+  
+      const totalActuales = document.querySelectorAll(".semester").length;
+      if (totalActuales < total) {
+        finishBtn.style.display = "inline-block";
       }
     }
-  });
-
-  semesterDiv.appendChild(courseDiv);
+  };
+  
+  semDiv.appendChild(courseDiv);
 }
 
-function updateTotalCredits() {
-  let total = 0;
+function updateCreditos() {
+  let suma = 0;
   document.querySelectorAll("[name='courseCredits[]']").forEach(input => {
-    const value = parseInt(input.value, 10);
-    if (!isNaN(value)) {
-      total += value;
-    }
+    const val = parseInt(input.value, 10);
+    if (!isNaN(val)) suma += val;
   });
-  creditosDisplay.innerHTML = `<strong>Créditos Totales:</strong> ${total}`;
+  creditosDisplay.innerHTML = `<strong>Créditos Totales:</strong> ${suma}`;
 }
 
-finishSemesterButton.addEventListener("click", () => {
-  currentSemester++;
-  addSemesterSection();
-});
+finishBtn.onclick = () => {
+  const actuales = document.querySelectorAll(".semester").length;
+  const siguiente = actuales + 1;
+  if (siguiente <= total) {
+    addSemester(siguiente);
+  } else {
+    alert("Ya has ingresado todos los semestres permitidos.");
+    finishBtn.style.display = "none";
+  }
+};
+
 
 function reindexSemesters() {
-  const semesterDivs = document.querySelectorAll(".semester");
-  currentSemester = semesterDivs.length > 0 ? semesterDivs.length : 1;
-
-  semesterDivs.forEach((div, index) => {
-    const newNumber = index + 1;
-    div.dataset.semester = newNumber;
-    const heading = div.querySelector("h3");
-    if (heading) heading.textContent = `Semestre ${newNumber}`;
+  const semDivs = document.querySelectorAll(".semester");
+  current = semDivs.length || 1;
+  semDivs.forEach((div, i) => {
+    div.dataset.semester = i + 1;
+    const h3 = div.querySelector("h3");
+    if (h3) h3.textContent = `Semestre ${i + 1}`;
   });
-}
-
-// Enviar formulario con validación de campos requeridos
-
-document.querySelector("button[type='submit']").addEventListener("click", (e) => {
-  e.preventDefault();
-
-  const nombre = document.getElementById("NombrePrograma").value.trim();
-  const duracion = document.getElementById("duracionPrograma").value.trim();
-  const descripcion = document.getElementById("descripcionPrograma").value.trim();
-  const justificacion = document.getElementById("Justificacion").value.trim();
-  const correo = document.getElementById("recipientEmail").value.trim();
-  const destinatario = document.getElementById("recipientName").value.trim();
-
-  if (!nombre || !duracion || !descripcion || !justificacion || !correo || !destinatario) {
-    alert("Por favor completa todos los campos requeridos.");
-    return;
-  }
-
-  const data = {
-    id: document.getElementById("documentId").value,
-    programa: nombre,
-    creditos: creditosDisplay.textContent.replace(/\D/g, ""),
-    semestres: duracion,
-    descripcion: descripcion,
-    destinatario: destinatario,
-    correo: correo,
-    justificacion: justificacion,
-    cursos: []
-  };
-
-  document.querySelectorAll(".semester").forEach(semesterDiv => {
-    const semestre = semesterDiv.dataset.semester;
-    semesterDiv.querySelectorAll(".course").forEach(courseDiv => {
-      const nombre = courseDiv.querySelector("[name='courseName[]']").value;
-      const creditos = courseDiv.querySelector("[name='courseCredits[]']").value;
-      data.cursos.push({ semestre, nombre, creditos });
+  document.querySelector("button[type='submit']").addEventListener("click", e => {
+    e.preventDefault();
+    const nombre = document.getElementById("NombrePrograma").value.trim(),
+          duracion = document.getElementById("duracionPrograma").value.trim(),
+          descripcion = document.getElementById("descripcionPrograma").value.trim(),
+          justificacion = document.getElementById("Justificacion").value.trim(),
+          correo = document.getElementById("recipientEmail").value.trim(),
+          destinatario = document.getElementById("recipientName").value.trim();
+  
+    if (!nombre || !duracion || !descripcion || !justificacion || !correo || !destinatario) {
+      alert("Por favor completa todos los campos requeridos.");
+      return;
+    }
+  
+    const data = {
+      id: document.getElementById("documentId").value,
+      programa: nombre,
+      creditos: creditosDisplay.textContent.replace(/\D/g, ""),
+      semestres: duracion,
+      descripcion,
+      destinatario,
+      correo,
+      justificacion,
+      cursos: []
+    };
+  
+    document.querySelectorAll(".semester").forEach(sem => {
+      const s = sem.dataset.semester;
+      sem.querySelectorAll(".course").forEach(c => {
+        data.cursos.push({
+          semestre: s,
+          nombre: c.querySelector("[name='courseName[]']").value,
+          creditos: c.querySelector("[name='courseCredits[]']").value
+        });
+      });
+    });
+  
+    let plan = "";
+    data.cursos.forEach(c => {
+      plan += `Semestre ${c.semestre}: ${c.nombre} (${c.creditos} créditos)\n`;
+    });
+  
+    fetch("https://prod-131.westus.logic.azure.com:443/workflows/409d19ff14b640f4bc73b64243dffb41/triggers/manual/paths/invoke?api-version=2016-06-01", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        NombrePrograma: data.programa,
+        Justificacion: data.justificacion,
+        PlanEstudio: plan,
+        correo: data.correo,
+        destinatario: data.destinatario
+      })
+    })
+    .then(res => {
+      alert(res.ok ? "Programa enviado correctamente a Power Automate." : "Error al enviar los datos.");
+    })
+    .catch(err => {
+      console.error("Error al enviar:", err);
+      alert("Hubo un error de red al intentar enviar.");
     });
   });
-// Construir texto para PlanEstudio
-let planEstudioTexto = "";
-
-data.cursos.forEach(curso => {
-  planEstudioTexto += `Semestre ${curso.semestre}: ${curso.nombre} (${curso.creditos} créditos)\n`;
-});
-
-  fetch("https://prod-131.westus.logic.azure.com:443/workflows/409d19ff14b640f4bc73b64243dffb41/triggers/manual/paths/invoke?api-version=2016-06-01", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-      NombrePrograma: data.programa,
-      Justificacion: data.justificacion,
-      PlanEstudio: planEstudioTexto,
-      correo: data.correo,
-      destinatario: data.destinatario
-    })
-    
-  })
-  .then(response => {
-    if (response.ok) {
-      alert("Programa enviado correctamente a Power Automate.");
-    } else {
-      alert("Error al enviar los datos.");
-    }
-  })
-  .catch(error => {
-    console.error("Error al enviar:", error);
-    alert("Hubo un error de red al intentar enviar.");
-  });
-
-});
+  
+}

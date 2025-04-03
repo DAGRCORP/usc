@@ -1,59 +1,37 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Formulario Crear / Modificar Programa</title>
-
-  <!-- Fuentes y estilos -->
-  <link href="="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="estilos.css">
 </head>
 <body>
   <div class="form-box">
     <img class="logo" src="https://genvirtual.usc.edu.co/posv/logo_acreditacion_Institucional.png" alt="Logo Universidad Santiago de Cali">
     <h2>Formulario de Programa Académico</h2>
-
-    <!-- ID solo para modificar -->
     <label for="documentId">ID del Documento (solo para modificar):</label>
     <input type="text" id="documentId" name="documentId" placeholder="Ingrese el ID si va a modificar">
-
-    <!-- Nombre del Programa -->
     <label for="NombrePrograma">Nombre del Programa:</label>
     <input type="text" id="NombrePrograma" name="NombrePrograma" placeholder="Ingrese el nombre del programa" required>
-
-    <!-- Duración en semestres -->
     <label for="duracionPrograma">Duración del Programa (en semestres):</label>
     <input type="number" id="duracionPrograma" name="duracionPrograma" placeholder="Ej: 10" min="1" required>
-
-    <!-- Descripción -->
     <label for="descripcionPrograma">Descripción del Programa:</label>
     <textarea id="descripcionPrograma" name="descripcionPrograma" rows="4" placeholder="Escriba una descripción general del programa..." required></textarea>
-
-    <!-- Dirigido a -->
     <label for="recipientName">Dirigido a:</label>
     <input type="text" id="recipientName" name="recipientName" placeholder="Ingrese el nombre del destinatario" required>
-
-    <!-- Correo -->
     <label for="recipientEmail">Correo:</label>
     <input type="email" id="recipientEmail" name="recipientEmail" placeholder="correo@usc.edu.co" required>
-
-    <!-- Justificación -->
     <label for="Justificacion">Justificación:</label>
     <textarea id="Justificacion" name="Justificacion" rows="4" placeholder="Describa el motivo o justificación..." required></textarea>
-
-    <!-- Plan de Estudio -->
     <div class="plan-estudio">
       <h3>Plan de Estudio:</h3>
       <div id="coursesContainer"></div>
       <button type="button" id="addCourseButton">+ Agregar Curso</button>
     </div>
-
-    <!-- Botón Enviar -->
     <button type="submit" id="submitButton">Guardar Programa</button>
   </div>
-
-  <!-- JavaScript -->
   <script src="script.js"></script>
 </body>
 </html>
