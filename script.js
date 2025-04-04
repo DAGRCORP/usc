@@ -168,9 +168,11 @@ document.getElementById("submitButton").addEventListener("click", (e) => {
       Justificacion: data.justificacion,
       PlanEstudio: plan,
       correo: data.correo,
-      destinatario: data.destinatario
+      destinatario: data.destinatario,
+      cursos: data.cursos  // ✅ ESTO FALTABA
     })
   })
+  
   .then(res => {
     alert(res.ok ? "Programa enviado correctamente a Power Automate." : "Error al enviar los datos.");
   })
