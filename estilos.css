@@ -1,117 +1,390 @@
-body {
-  font-family: Arial, sans-serif;
-  margin: 0;
+.sidebar {
+  width: 250px;
+  background-color: #003366;
+  padding-top: 0.5rem;
+  height: 100vh; /* Ocupa toda la altura de la ventana */
+  position: fixed;
+  top: 72px; /* Comienza justo debajo de la barra superior */
+  left: 0;
+  overflow-y: auto;
+  z-index: 1000; /* Siempre por encima del contenido */
+}
+.sidebar ul {
+  list-style-type: none;
   padding: 0;
+}
+.sidebar ul li {
+  margin-bottom: 1rem;
+}
+.sidebar ul li a {
+  color: white;
+  text-decoration: none;
+  padding: 0.8rem 1rem;
+  display: block;
+}
+.sidebar ul li a:hover {
+  background-color: #00509e;
+  border-radius: 4px;
+}
+.container {
+  margin-top: 0px;
+  padding-top: 0;
+  margin-left: 260px; /* Espacio suficiente para la barra lateral */
+  padding: 2rem 3rem;
+  background-color: #ffffff;
+  width: calc(100% - 260px);
+  min-height: 100vh;
+  overflow: auto;
+  overflow-x: hidden;
+  box-sizing: border-box;
+}
+h1 {
+  color: #003366;
+  margin-bottom: 1rem; /* Reduce el espacio inferior del título */
+}
+label {
+  font-weight: bold;
+  display: block;
+  margin-top: 0.5rem; /* Reduce el espacio superior */
+  margin-bottom: 0.5rem; /* Reduce el espacio inferior */
+  color: #002244;
+}
+textarea {
+  width: 100%;
+  padding: 0.8rem; /* Ajusta el padding del textarea */
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+  resize: vertical;
+  background-color: #fdfdfd;
+}
+.btn-form {
+  display: block;
+  width: 220px;
+  margin: 3rem auto 0 auto;
+  padding: 0.85rem;
+  background-color: #003366;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  cursor: pointer;
+}
+button:hover {
+  background-color: #0077cc;
+}
+.btn-aprobado {
+  background-color: #007a33;
+  color: white;
+  padding: 0.7rem 1.5rem;
+  border-radius: 6px;
+  border: none;
+  font-size: 1rem;
+  cursor: pointer;
+}
+.btn-noaprobado {
+  background-color: #a30000;
+  color: white;
+  padding: 0.7rem 1.5rem;
+  border-radius: 6px;
+  border: none;
+  font-size: 1rem;
+  cursor: pointer;
+}
+#resultado_revision {
+  margin: 2rem 0;
+  text-align: center;
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+.form-group {
+  margin-bottom: 1.5rem;
+}
+.form-group label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+  color: #003366;
+}
+.form-group input, .form-group textarea {
+  width: 100%;
+  padding: 0.8rem;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+}
+.btn-enviar {
+  background-color: #0056a3;
+  color: white;
+  padding: 0.75rem 2rem;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  cursor: pointer;
+  display: block;
+  margin: 2rem auto 0 auto;
+}
+.btn-enviar:hover {
+  background-color: #0077cc;
+}
+.main-nav {
+  background-color: #003366;
+  padding: 1rem;
+  margin-bottom: 0;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+}
+.main-nav ul {
+  list-style: none;
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  padding: 0;
+  margin: 0;
+}
+.main-nav a {
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+}
+.main-nav a:hover {
+  text-decoration: underline;
+}
+/* 1) Oculta todas las secciones */
+.step {
+  display: none;
+  margin-bottom: 1rem;
+  min-height: calc(100vh - 150px);
+  padding-top: 1rem;
+  overflow-y: auto;
+}
+/* 2) Sólo muestra la sección activa */
+.step.active {
+  display: block;
+}
+/* 3) Evita el scroll en el body principal */
+body {
+  overflow: auto;
+}
+/* 4) Estilos para la barra de navegación fija */
+#wizard-nav {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 130vh;
-  background: #f4f4f4;
+  gap: 1rem;
+  margin-top: 2rem;
+  padding: 1rem;
+  background: white;
+  box-shadow: 0 -1px 3px rgba(0,0,0,0.05);
+  border-top: 1px solid #ccc;
 }
-
-.form-box {
-  background: #fff;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-  padding: 20px;
-  width: 1000px;
-  max-width: 90%;
-  text-align: center;
+#wizard-nav button {
+  margin: 0 0.5rem;
 }
-
-h2, h3 {
-  color: #333;
-  font-family: 'Poppins', sans-serif;
-  font-weight: 700;
+/* — Compensar el header fijo — */
+section.step {
+  margin-top: 72px; /* Asegura que haya espacio para la barra superior */
+  padding-top: 1rem;
+  scroll-margin-top: 72px; /* Esto garantiza que las secciones no se oculten */
+  transition: margin-top 0.3s;
 }
-
-label {
-  display: block;
-  margin-top: 10px;
+/* Opcional: estilo para que el <label> destaque */
+.step label {
+  font-size: 14pt !important;
   font-weight: bold;
+  color: #003366;
+  border: none; /* asegúrate de que esto esté */
+  padding: 0;
+}
+
+/* 2) Un pequeño margen entre Prev, indicador y Next */
+#wizard-nav button,
+#wizard-nav span {
+  margin-right: 0.5rem;
+}
+/* 3) Empujo el botón "Guardar Programa" hacia la derecha */
+#wizard-nav .btn-form {
+  /* Si lo quieres al final: */
+  margin-left: auto;
+  /* Y quito las reglas de display:block y ancho fijo */
+  display: inline-block;
+  width: auto;
+}
+/*estilos del archivos*/
+body.filemgr-page {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f9;
+}
+.filemgr-page .container {
+  display: flex;
+  height: 100vh;
+}
+.filemgr-page .sidebar {
+  width: 250px;
+  background-color: #003366;
+  color: white;
+  overflow-y: auto;
+  padding: 1rem;
+  box-sizing: border-box;
+}
+.filemgr-page .sidebar h2 {
+  margin-top: 0;
+  font-size: 1.2rem;
+}
+.filemgr-page .sidebar ul {
+  list-style: none;
+  padding: 0;
+}
+.filemgr-page .sidebar li {
+  margin-bottom: 0.5rem;
+  cursor: pointer;
+}
+.filemgr-page .sidebar li:hover {
+  text-decoration: underline;
+}
+.filemgr-page .content {
+  flex: 1;
+  padding: 1rem;
+  overflow-y: auto;
+}
+.filemgr-page .folder-title {
+  font-size: 1.3rem;
+  margin-bottom: 1rem;
+}
+.filemgr-page table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+}
+.filemgr-page th,
+.filemgr-page td {
+  padding: 0.75rem;
+  border: 1px solid #ddd;
   text-align: left;
 }
-
-input, textarea, button {
-  width: 90%;
-  padding: 10px;
-  margin-top: 5px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  font-family: 'Poppins', sans-serif;
+.filemgr-page th{
+  background-color: #00509e;
+  color: white;
 }
-
-textarea {
-  resize: none;
-  font-size: 14px;
-  font-weight: 400;
+.filemgr-page .hidden{
+  display: none;
 }
-
-.course {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-top: 10px;
+.summernote {
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 100% !important;
+  box-sizing: border-box;
 }
-
-.course input {
-  flex: 1;
+.note-editor {
+  width: 100% !important;
+  max-width: 100% !important;
 }
-
-.course button,
-#addCourseButton,
-button[type="submit"] {
+* {
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
+.step label {
+  font-size: 14pt !important;
+  font-weight: bold;
+  color: #003366;
   border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: transform 0.2s ease-in-out;
+  padding: 0;
 }
-
-.course button {
-  background: red;
-  color: #fff;
-  font-size: 14px;
-  height: 36px;
-  width: 36px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.course button:hover,
-#addCourseButton:hover,
-button[type="submit"]:hover {
-  transform: scale(1.1);
-  opacity: 0.8;
-}
-
-#addCourseButton {
-  background: green;
-  color: #fff;
-  margin-top: 15px;
-}
-
-button[type="submit"] {
-  background: blue;
-  color: #fff;
-  margin-top: 20px;
-}
-
-.semester {
-  background: #f9f9f9;
-  padding: 10px;
-  margin-top: 10px;
-  border-left: 4px solid #007bff;
-  border-radius: 5px;
-}
-
-h3 {
-  color: #007bff;
-  margin-bottom: 5px;
-}
-
-.logo {
-  max-width: 150px;
-  margin: 0 auto 20px;
+img {
+  max-width: 100% !important;
+  height: auto !important;
   display: block;
+  margin: auto;
+}
+h1, h2, h3, h4, h5 {
+  font-size: 14pt;
+  font-weight: bold;
+  margin-top: 1.5em;
+  margin-bottom: 0.5em;
+}
+.pdf-section {
+  page-break-inside: avoid !important;
+  break-inside: avoid !important;
+  margin-bottom: 2cm;
+  padding-bottom: 1cm;
+  border-bottom: 1px solid #cccccc;
+}
+.pdf-section h2 {
+  font-size: 15pt;
+  color: #003366;
+  margin-bottom: 0.75rem;
+  font-weight: bold;
+}
+.pdf-section p {
+  font-size: 12pt;
+  line-height: 1.6;
+  color: #222222;
+}
+.progress-container {
+  width: 100%;
+  background-color: #eee;
+  border-radius: 6px;
+  height: 24px;
+  margin: 1rem 0 2rem;
+  overflow: hidden;
+}
+.progress-bar {
+  height: 100%;
+  background-color: #0077cc;
+  width: 0%;
+  transition: width 0.3s ease;
+  color: white;
+  text-align: center;
+  font-size: 0.9rem;
+  line-height: 24px;
+  font-weight: bold;
+}
+.pdf-section * {
+  box-sizing: border-box;
+}
+
+img {
+  max-width: 100% !important;
+  height: auto !important;
+  display: block;
+  margin: auto;
+}
+
+.titulo-seccion {
+  font-size: 14pt !important;
+  font-weight: bold;
+  margin-top: 1.5em;
+  margin-bottom: 0.5em;
+  border: none !important;
+  padding: 0 !important;
+  color: #003366;
+}
+
+
+.contenido-seccion {
+  font-size: 12pt;
+  line-height: 1.6;
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
+@media print {
+  body {
+    margin: 2.54cm;
+  }
+
+  .container {
+    margin: 0;
+    padding: 0;
+  }
+
+  .pdf-section {
+    page-break-inside: avoid;
+    break-inside: avoid;
+    margin-bottom: 1.5cm;
+  }
 }

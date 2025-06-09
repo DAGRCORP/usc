@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="estilos.css" rel="stylesheet"/>
+  <title>Gestor de Archivos y Carpetas</title>
+</head>
+<body class="filemgr-page">
+  <h2>Documentos Guardados</h2>
+  <button onclick="crearNuevaCarpeta()">➕ Crear nuevo programa</button>
+<table border="1" style="width: 100%; text-align: center;">
+  <thead>
+    <tr>
+      <th>Nombre</th>
+      <th>Documento (.docx)</th>
+      <th>Avance (.json)</th>
+      <th>Acciones</th>
+    </tr>
+  </thead>
+  <tbody id="listaArchivos">
+    <!-- Se llenará con JavaScript -->
+  </tbody>
+</table>
+  <div id="nav-placeholder"></div>
+  <div class="container">
+    <nav class="sidebar">
+      <h2>Carpetas</h2>
+      <ul id="folderList"></ul>
+    </nav>
+    <div class="content">
+      <div id="folderView">
+        <p class="folder-title">Selecciona una carpeta...</p></div>
+    </div>
+  </div>
+<script src="nav.js" defer></script>
+<script src="fileManager.js" defer></script>
+</body>
+</html>

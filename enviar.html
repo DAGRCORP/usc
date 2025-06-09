@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="es">
+ <head>
+  <meta charset="utf-8"/>
+  <title>Resumen del Programa Académico</title>
+  <link href="estilos.css" rel="stylesheet"/>
+ </head>
+ <body class="send-page">
+  <div id="nav-placeholder"></div>
+  <div class="container">
+   <h1>Enviar Documento por Correo</h1>
+   <div id="resumenContenido"></div>
+   <form>
+    <div class="form-group">
+     <label for="email_to">Para</label>
+     <input id="email_to" name="email_to" placeholder="para@ejemplo.com" type="email"/></div>
+    <div class="form-group">
+     <label for="email_cc">CC</label>
+     <input id="email_cc" name="email_cc" placeholder="copia@ejemplo.com" type="email"/></div>
+    <div class="form-group">
+     <label for="subject">Asunto</label>
+     <input id="subject" name="subject" placeholder="Asunto del mensaje" type="text"/></div>
+    <div class="form-group">
+     <label for="body">Mensaje</label>
+     <textarea id="body" name="body" placeholder="Escribe tu mensaje aquí..." rows="6"></textarea></div>
+    <button class="btn-enviar" type="submit">Enviar Correo</button>
+   </form>
+  </div>
+  <script src="script.js"></script>
+  <script src="nav.js" defer></script>
+ </body>
+</html>
