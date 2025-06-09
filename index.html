@@ -200,6 +200,27 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <!-- 5) script.js (tu wizard y llamadas a Power Automate) -->
 <div id="contenidoPDF" style="display: none;"></div>
+<!-- Firebase SDKs -->
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js"></script>
+
+<script>
+  const firebaseConfig = {
+    apiKey: "AIzaSyDwg88RKcye5l1ZvwgkB7LSAvkcCUuPAr1E",
+    authDomain: "archivos-bf049.firebaseapp.com",
+    projectId: "archivos-bf049",
+    storageBucket: "archivos-bf049.appspot.com",
+    messagingSenderId: "713944158434",
+    appId: "1:713944158434:web:9657301a63ce7023184ebb"
+  };
+
+  // Inicializa Firebase
+  firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth();
+  const db = firebase.firestore();
+</script>
+
 <script src="script.js" defer></script>
 </body>
 </html>
