@@ -7,33 +7,85 @@
   <title>Gestor de Archivos y Carpetas</title>
 </head>
 <body class="filemgr-page">
-  <h2>Documentos Guardados</h2>
-  <button onclick="crearNuevaCarpeta()">➕ Crear nuevo programa</button>
-<table border="1" style="width: 100%; text-align: center;">
-  <thead>
-    <tr>
-      <th>Nombre</th>
-      <th>Documento (.docx)</th>
-      <th>Avance (.json)</th>
-      <th>Acciones</th>
-    </tr>
-  </thead>
-  <tbody id="listaArchivos">
-    <!-- Se llenará con JavaScript -->
-  </tbody>
-</table>
+  <div class="container">
+    <h1>📁 Gestor de Archivos</h1>
+    <button class="btn-enviar" onclick="nuevoDocumento()">➕ Nuevo Documento</button>
+  
+    <table class="tabla-archivos">
+      <thead>
+        <tr>
+          <th>Nombre</th>
+          <th>Fecha</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody id="listaArchivos">
+        <!-- Se carga por JS -->
+      </tbody>
+    </table>
+  </div>
+    
+  <script>
+    function nuevoDocumento() {
+      localStorage.removeItem("docFirebaseID");
+      window.location.href = "index.html";
+    }
+  </script>
   <div id="nav-placeholder"></div>
   <div class="container">
-    <nav class="sidebar">
-      <h2>Carpetas</h2>
-      <ul id="folderList"></ul>
-    </nav>
-    <div class="content">
-      <div id="folderView">
-        <p class="folder-title">Selecciona una carpeta...</p></div>
-    </div>
-  </div>
 <script src="nav.js" defer></script>
-<script src="fileManager.js" defer></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js"></script>
+<script>
+  const firebaseConfig = {
+    apiKey: "AIzaSyDwg88RKcye5l1ZvwgkB7LSAvkcCUuPAr1E",
+    authDomain: "archivos-bf049.firebaseapp.com",
+    projectId: "archivos-bf049",
+    storageBucket: "archivos-bf049.appspot.com",
+    messagingSenderId: "713944158434",
+    appId: "1:713944158434:web:9657301a63ce7023184ebb"
+  };
+
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.firestore();
+
+  async function cargarArchivos() {
+    const tabla = document.getElementById("listaArchivos");
+    tabla.innerHTML = "";
+
+    const snapshot = await db.collection("archivos").orderBy("fecha", "desc").get();
+    snapshot.forEach(doc => {
+      const data = doc.data();
+      const tr = document.createElement("tr");
+
+      tr.innerHTML = `
+        <td>${data.nombre}</td>
+        <td>${data.fecha?.toDate().toLocaleString() || '-'}</td>
+        <td>
+          <button onclick="abrir('${doc.id}')">✏️ Editar</button>
+          <button onclick="eliminar('${doc.id}')">🗑️ Eliminar</button>
+        </td>
+      `;
+      tabla.appendChild(tr);
+    });
+  }
+
+  function abrir(id) {
+    localStorage.setItem("docFirebaseID", id);
+    window.location.href = "index.html"; // o revision.html si así lo usas
+  }
+
+  function eliminar(id) {
+    if (confirm("¿Eliminar este archivo?")) {
+      db.collection("archivos").doc(id).delete().then(() => {
+        alert("Archivo eliminado");
+        cargarArchivos();
+      });
+    }
+  }
+
+  document.addEventListener("DOMContentLoaded", cargarArchivos);
+</script>
+
 </body>
 </html>

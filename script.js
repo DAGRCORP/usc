@@ -1,4 +1,3 @@
-const FLOW_CREATE_URL  = 'https://prod-189.westus.logic.azure.com:443/workflows/1b9b4aaf265545c0aa6823862422f203/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=pPk3lA4Fqqo-f01CRRA1PmMPk4SK3IYybLe3US4jUK0';
 let contenidoPendiente = null;
 // ================================================
 // Cargar avance si existe en localStorage
@@ -163,62 +162,6 @@ let titles = [
   ];
 document.addEventListener('DOMContentLoaded', async () => {
   // Verifica si hay un archivo desde OneDrive
-const archivoDesdeOneDrive = localStorage.getItem("archivoParaCargar");
-if (archivoDesdeOneDrive) {
-  try {
-    fetch(archivoDesdeOneDrive)
-      .then(res => res.json())
-      .then(data => {
-        localStorage.setItem("progresoParaCargar", JSON.stringify(data));
-        alert('✅ Avance importado desde OneDrive. Se aplicará al recargar.');
-        localStorage.removeItem("archivoParaCargar");
-        location.reload();
-      })
-      .catch(err => {
-        console.error("❌ Error al cargar JSON desde OneDrive", err);
-        alert("Error al cargar el archivo desde OneDrive.");
-      });
-  } catch (err) {
-    console.error("❌ Error general al importar", err);
-  }
-}
-  async function guardarProgreso() {
-    const totalSecciones = 151;
-    const body = {};
-    for (let i = 0; i < totalSecciones; i++) {
-      const editor = $(`#contenido_section_${i}`);
-      if (!editor.length) continue;
-      const contenido = editor.summernote('code');
-      if (contenido && contenido !== '<p><br></p>') {
-        const nombreCampo = `Seccion${i.toString().padStart(3, '0')}`;
-  body[nombreCampo] = contenido;
-      }
-    }
-    try {
-      const payload = {
-        nombre: "avance_formulario.json",  // nombre del archivo en OneDrive
-        contenido: JSON.stringify(body, null, 2) // se envía como string plano JSON
-      };
-    
-      const res = await fetch(FLOW_CREATE_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      });
-    
-      if (!res.ok) {
-        const error = await res.text();
-        console.error('❌ Error al guardar en OneDrive:', error);
-        alert('Hubo un error al guardar el avance.');
-        return;
-      }
-    
-      alert('✅ Avance guardado correctamente en OneDrive.');
-    } catch (err) {
-      console.error('❌ Error de red:', err);
-      alert('No se pudo conectar al servidor.');
-    }
-  }
   window.guardarProgreso = guardarProgreso;
   function actualizarBarraProgreso() {
     const total = steps.length;
@@ -313,15 +256,6 @@ $('.summernote').each(function (index) {
 });
 // =================================================
 // 6) Funciones para invocar tus flujos
-async function sendSection(sectionIndex, htmlContent) {
-  const res = await fetch(FLOW_CREATE_URL, {
-    method: 'POST',
-    headers: {'Content-Type':'application/json'},
-    body: JSON.stringify({ sectionIndex, htmlContent })
-  });
-  if (!res.ok) throw new Error(res.statusText);
-  return res.json();
-}
 // =================================================
 // 7) Wizard: mostrar una sección a la vez
 const steps     = Array.from(document.querySelectorAll('.step'));
@@ -403,176 +337,7 @@ function cargarProgresoDesdeJSON(input) {
   };
   reader.readAsText(file);
 }
-async function enviarADocumento() {
-  const totalSteps = 151; // o tu número real de secciones
-  let contenidoHTML = `
-  <!DOCTYPE html>
-  <html>
-  <head>
-    <meta charset="UTF-8">
-    <title>Documento generado</title>
-    <style>
-      body { font-family: Arial; padding: 20px; }
-      h2 { color: #005baa; margin-top: 40px; }
-      .contenido-seccion { margin-bottom: 30px; }
-      img { max-width: 100%; }
-    </style>
-  </head>
-  <body>
-  `;
 
-  for (let i = 0; i < totalSteps; i++) {
-    const seccion = document.getElementById(`section_${i}`);
-    if (seccion) {
-      const titulo = document.querySelector(`#navList li:nth-child(${i + 1}) a`)?.textContent || `Sección ${i + 1}`;
-      const contenido = $(seccion).find('.summernote').summernote('code');
-
-      if (contenido.trim()) {
-        contenidoHTML += `
-          <div class="pdf-section">
-            <h2>${titulo}</h2>
-            <div class="contenido-seccion">${contenido}</div>
-          </div>
-        `;
-      }
-    }
-  }
-
-  contenidoHTML += `
-  </body>
-  </html>
-  `;
-
-  // Ahora mandas esto al flujo
-  const payload = {
-    nombre: "documento.html",
-    html: contenidoHTML
-  };
-
-  const response = await fetch("https://prod-18.westus.logic.azure.com:443/workflows/8151b6338f544255bc3e9cdef8cf09ef/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=6BSQJV1i-sXxrQo4U0edb8wPObGPTUWXYjgVlezAXfE", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payload)
-  });
-
-  const resultado = await response.json();
-  if (resultado.descarga) {
-    window.open(resultado.descarga, "_blank");
-  } else {
-    alert("No se pudo generar el documento.");
-    console.log(resultado);
-  }
-}
-
-// Recupera todo el contenido en orden
-function guardarProgresoComoObjeto() {
-  const secciones = {};
-  document.querySelectorAll('[id^="section_"]').forEach((seccion, i) => {
-    const editor = seccion.querySelector('.summernote');  // 👈 cambia aquí
-    if (editor) {
-      const contenido = $(`#contenido_section_${i}`).summernote('code');
-      secciones[`section_${i}`] = contenido;
-    }
-  });
-  return secciones;
-}
-// Genera el PDF con html2pdf.js
-function limpiarHTML(html) {
-  const tempDiv = document.createElement("div");
-  tempDiv.innerHTML = html;
-  tempDiv.querySelectorAll('*').forEach(el => {
-    el.removeAttribute("style");
-    el.removeAttribute("class");
-  });
-  return tempDiv.innerHTML;
-}
-function generarPDF() {
-  // Crear contenedor temporal visible
-  const contenedor = document.createElement("div");
-  contenedor.id = "contenidoPDF-visible";
-  contenedor.style.padding = "2cm";
-  contenedor.style.fontFamily = "Arial, sans-serif";
-  contenedor.style.color = "#000";
-  contenedor.style.lineHeight = "1.6";
-  contenedor.style.fontSize = "12pt";
-  contenedor.style.width = "100%";
-  // Título principal
-  const titulo = document.createElement("h1");
-  titulo.innerText = `Documento Maestro - ${nombrePrograma}`;
-  titulo.style.textAlign = "center";
-  titulo.style.fontSize = "18pt";
-  titulo.style.marginBottom = "30px";
-  titulo.style.color = "#003366";
-  contenedor.appendChild(titulo);
-  // Recolectar secciones válidas
-  const secciones = document.querySelectorAll(".step");
-  secciones.forEach((seccion, index) => {
-    const rawHTML = seccion.querySelector(".note-editable")?.innerHTML.trim();
-    if (!rawHTML || rawHTML === "<p><br></p>") return;
-    const bloque = document.createElement("div");
-    bloque.className = "pdf-section";
-    bloque.style.pageBreakInside = "avoid";
-bloque.style.marginBottom = "2cm";
-bloque.style.paddingBottom = "1cm";
-bloque.style.borderBottom = "1px solid #ccc";
-
-// 🔧 Corrección específica para evitar que el contenido empiece en medio de la página
-bloque.style.minHeight = "1px";
-bloque.style.paddingTop = "0";
-bloque.style.marginTop = "0";
-    // Título de sección
-    const tituloSeccion = document.querySelector(`#navList li:nth-child(${index + 1}) a`);
-    const h2 = document.createElement("h2");
-    h2.textContent = tituloSeccion ? tituloSeccion.textContent : `Sección ${index + 1}`;
-    h2.style.fontSize = "15pt";
-    h2.style.color = "#003366";
-    h2.style.marginBottom = "0.75rem";
-    bloque.appendChild(h2);
-    // Contenido limpio
-    const contenido = document.createElement("div");
-    contenido.innerHTML = limpiarHTML(rawHTML);
-    // ✅ Redimensionar imágenes grandes antes de añadir al bloque
-    contenido.querySelectorAll("img").forEach(img => {
-      img.style.maxWidth = "100%";
-      img.style.maxHeight = "250px";  // límite de altura
-      img.style.width = "auto";
-      img.style.height = "auto";
-      img.style.display = "block";
-      img.style.margin = "1rem auto";
-    });
-    bloque.appendChild(contenido);
-    contenedor.appendChild(bloque);
-  });
-  // Agregar al body temporalmente
-  document.body.appendChild(contenedor);
-  // Generar PDF
-  html2pdf().set({
-    margin: [1.5, 1.5],
-    filename: `${nombrePrograma}.pdf`,
-    image: { type: "jpeg", quality: 0.98 },
-    html2canvas: {
-      scale: 2,
-      useCORS: true
-    },
-    jsPDF: {
-      unit: "cm",
-      format: "a4",
-      orientation: "portrait"
-    },
-    pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
-  }).from(contenedor).save().then(() => {
-    contenedor.remove(); // limpiar después
-  });
-}
-function cargarProgresoDesdeObjeto(objeto) {
-  Object.keys(objeto).forEach(key => {
-    const match = key.match(/seccion(\d+)/i);
-    if (match) {
-      const index = match[1];
-      $(`#summernote${index}`).summernote('code', objeto[key]);
-    }
-  });
-}
 
 function limpiarHTML(html) {
   const tempDiv = document.createElement("div");
@@ -590,42 +355,89 @@ function limpiarHTML(html) {
   return tempDiv.innerHTML;
 }
 
-async function exportarComoWordDesdeEditor() {
-  const contenido = $('#contenido_section_0').summernote('code'); // O cualquier sección
-  const nombreArchivo = prompt("Nombre del archivo:", "documento.pdf");
+// Autenticación
+// Mostrar login o contenido principal según el usuario
+auth.onAuthStateChanged(user => {
+  if (user) {
+    document.getElementById("pantalla-login").style.display = "none";
+    document.getElementById("pantalla-principal").style.display = "block";
+    document.getElementById("usuario-email").textContent = "Sesión iniciada como: " + user.email;
+  } else {
+    document.getElementById("pantalla-login").style.display = "block";
+    document.getElementById("pantalla-principal").style.display = "none";
+  }
+});
 
-  if (!contenido || !nombreArchivo) {
-    alert("Debes escribir contenido y un nombre de archivo.");
-    return;
+function iniciarSesion() {
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
+
+  auth.signInWithEmailAndPassword(email, password)
+    .then(() => {
+      // Redirigir directamente al gestor de archivos
+      window.location.href = "archivosguardados.html";
+    })
+    .catch(error => alert("⚠️ Error: " + error.message));
+}
+
+
+function registrar() {
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
+  auth.createUserWithEmailAndPassword(email, password)
+    .then(() => alert("Registrado con éxito"))
+    .catch(e => alert("Error al registrarse: " + e.message));
+}
+
+function cerrarSesion() {
+  auth.signOut();
+}
+
+
+
+function guardarProgreso() {
+  const datos = {};
+  const totalSteps = 151;
+
+  for (let i = 0; i < totalSteps; i++) {
+    const seccion = document.getElementById(`section_${i}`);
+    if (seccion) {
+      const titulo = document.querySelector(`#navList li:nth-child(${i + 1}) a`)?.textContent || `Sección ${i + 1}`;
+      const contenido = $(seccion).find('.summernote').summernote('code');
+      if (contenido.trim()) datos[titulo] = contenido;
+    }
   }
 
-  const payload = {
-    html: contenido,
-    nombre: nombreArchivo.endsWith('.html') ? nombreArchivo : nombreArchivo.replace(/\.pdf?$/, '') + '.html'
-  };
+  const nombre = prompt("Nombre del archivo:");
+  if (!nombre) return;
+
+  db.collection("archivos").add({
+    nombre,
+    fecha: new Date(),
+    contenido: datos
+  }).then(() => alert("✅ Guardado en Firebase"));
+}
+
+window.addEventListener("DOMContentLoaded", async () => {
+  const id = localStorage.getItem("docFirebaseID");
+  if (!id) return;
 
   try {
-    const respuesta = await fetch("https://prod-18.westus.logic.azure.com:443/workflows/8151b6338f544255bc3e9cdef8cf09ef/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=6BSQJV1i-sXxrQo4U0edb8wPObGPTUWXYjgVlezAXfE", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload)
-    });
+    const doc = await db.collection("archivos").doc(id).get();
+    if (!doc.exists) return;
 
-    const resultado = await respuesta.json();
-    alert("✅ Documento generado con éxito");
-    console.log("Ruta del archivo convertido:", resultado);
-    console.log("🔗 Enlace recibido desde Power Automate:", resultado.descarga);
-    if (resultado.descarga && resultado.descarga.startsWith("http")) {
-      window.open(resultado.descarga, "_blank");
-    } else {
-      alert("⚠️ El flujo no devolvió un enlace de descarga. Verifica que la conversión fue exitosa.");
-      console.error("No se recibió URL válida:", resultado);
+    const contenido = doc.data().contenido;
+    const totalSteps = 151;
+
+    for (let i = 0; i < totalSteps; i++) {
+      const seccion = document.getElementById(`section_${i}`);
+      if (seccion) {
+        const titulo = document.querySelector(`#navList li:nth-child(${i + 1}) a`)?.textContent || `Sección ${i + 1}`;
+        const html = contenido[titulo] || "";
+        $(seccion).find('.summernote').summernote('code', html);
+      }
     }
-    
- // o comparte el enlace
-
   } catch (error) {
-    console.error("❌ Error al generar el documento:", error);
-    alert("Hubo un error. Verifica tu flujo o tu conexión.");
+    console.error("Error cargando archivo:", error);
   }
-}
+});
