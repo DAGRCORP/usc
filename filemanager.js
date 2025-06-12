@@ -1,38 +1,40 @@
+import { getFirestore, collection, getDocs, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/11.9.0/firebase-firestore.js";
+
+const db = window.db;
+
 document.addEventListener("DOMContentLoaded", async () => {
   const lista = document.getElementById("listaArchivos");
   lista.innerHTML = "";
 
   try {
-    const snapshot = await db.collection("archivos").orderBy("fecha", "desc").get();
-
-    snapshot.forEach(doc => {
-      const data = doc.data();
+    const snapshot = await getDocs(collection(db, "archivos"));
+    snapshot.forEach(docItem => {
+      const data = docItem.data();
       const fila = document.createElement("tr");
 
       fila.innerHTML = `
         <td>${data.nombre}</td>
         <td>—</td>
-        <td>📂 <a href="#" onclick="cargar('${doc.id}')">Cargar</a></td>
-        <td><button onclick="eliminar('${doc.id}')">🗑️ Eliminar</button></td>
+        <td>📂 <a href="#" onclick="cargar('${docItem.id}')">Cargar</a></td>
+        <td><button onclick="eliminar('${docItem.id}')">🗑️ Eliminar</button></td>
       `;
 
       lista.appendChild(fila);
     });
-  } catch (error) {
-    console.error("Error cargando archivos:", error);
+  } catch (e) {
+    console.error("Error al cargar archivos:", e);
   }
 });
 
-function cargar(id) {
-  localStorage.setItem("docFirebaseID", id);
-  window.location.href = "index.html"; // o revision.html
-}
-
-function eliminar(id) {
-  if (confirm("¿Seguro que deseas eliminar este archivo?")) {
-    db.collection("archivos").doc(id).delete().then(() => {
-      alert("Archivo eliminado");
-      location.reload();
-    });
+window.eliminar = async function (id) {
+  if (confirm("¿Eliminar documento?")) {
+    await deleteDoc(doc(db, "archivos", id));
+    alert("Eliminado");
+    location.reload();
   }
-}
+};
+
+window.cargar = function (id) {
+  localStorage.setItem("docFirebaseID", id);
+  window.location.href = "index.html";
+};

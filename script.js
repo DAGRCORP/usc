@@ -1,3 +1,4 @@
+
 let contenidoPendiente = null;
 // ================================================
 // Cargar avance si existe en localStorage
@@ -357,16 +358,16 @@ function limpiarHTML(html) {
 
 // Autenticación
 // Mostrar login o contenido principal según el usuario
-auth.onAuthStateChanged(user => {
-  if (user) {
-    document.getElementById("pantalla-login").style.display = "none";
-    document.getElementById("pantalla-principal").style.display = "block";
-    document.getElementById("usuario-email").textContent = "Sesión iniciada como: " + user.email;
-  } else {
-    document.getElementById("pantalla-login").style.display = "block";
-    document.getElementById("pantalla-principal").style.display = "none";
-  }
-});
+//auth.onAuthStateChanged(user => {
+//  if (user) {
+//    document.getElementById("pantalla-login").style.display = "none";
+//    document.getElementById("pantalla-principal").style.display = "block";
+//    document.getElementById("usuario-email").textContent = "Sesión iniciada como: " + user.email;
+//  } else {
+//    document.getElementById("pantalla-login").style.display = "block";
+//    document.getElementById("pantalla-principal").style.display = "none";
+//  }
+//});
 
 function iniciarSesion() {
   const email = document.getElementById("email").value;
@@ -379,8 +380,6 @@ function iniciarSesion() {
     })
     .catch(error => alert("⚠️ Error: " + error.message));
 }
-
-
 function registrar() {
   const email = document.getElementById("email").value;
   const password = document.getElementById("password").value;
@@ -392,9 +391,6 @@ function registrar() {
 function cerrarSesion() {
   auth.signOut();
 }
-
-
-
 function guardarProgreso() {
   const datos = {};
   const totalSteps = 151;
@@ -441,3 +437,61 @@ window.addEventListener("DOMContentLoaded", async () => {
     console.error("Error cargando archivo:", error);
   }
 });
+async function guardarEnFirebase() {
+  const nombre = prompt("Nombre del documento:");
+  if (!nombre) return alert("Debes ingresar un nombre válido");
+
+  const contenido = {};
+  const totalSteps = 151;
+  for (let i = 0; i < totalSteps; i++) {
+    const seccion = document.getElementById(`section_${i}`);
+    if (seccion) {
+      const html = $(seccion).find('.summernote').summernote('code');
+      contenido[`seccion${i + 1}`] = html;
+    }
+  }
+
+  const docFirebaseID = localStorage.getItem("docFirebaseID");
+
+  const docData = {
+    nombre,
+    fecha: new Date(),
+    contenido
+  };
+
+  if (docFirebaseID) {
+    await db.collection("archivos").doc(docFirebaseID).set(docData);
+    alert("Documento actualizado en Firebase");
+  } else {
+    const ref = await db.collection("archivos").add(docData);
+    localStorage.setItem("docFirebaseID", ref.id);
+    alert("Documento nuevo guardado en Firebase");
+  }
+}
+async function crearNuevoArchivo() {
+  if (!confirm("¿Deseas crear un nuevo archivo? Se borrará el contenido actual.")) return;
+
+  const nombre = prompt("Escribe el nombre del nuevo archivo:");
+  if (!nombre) return alert("Debes ingresar un nombre");
+
+  const contenido = {};
+  const totalSteps = 151;
+  for (let i = 0; i < totalSteps; i++) {
+    contenido[`seccion${i + 1}`] = "";
+  }
+
+  try {
+    const ref = await addDoc(collection(db, "archivos"), {
+      nombre,
+      fecha: new Date(),
+      contenido
+    });
+
+    localStorage.setItem("docFirebaseID", ref.id);
+    alert("✅ Nuevo archivo creado");
+    location.reload();
+  } catch (error) {
+    console.error("❌ Error al crear archivo:", error);
+    alert("No se pudo crear el archivo en Firebase");
+  }
+}
