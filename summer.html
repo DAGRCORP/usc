@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Formulario con Summernote</title>
+  <!-- Bootstrap (requerido) -->
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Summernote CSS -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.18/summernote-bs4.min.css" rel="stylesheet">
+</head>
+<body class="p-4">
+  <h2>Formulario con Editor Summernote</h2>
+  <form id="formulario">
+    <textarea id="contenido" name="contenido"></textarea>
+    <br>
+    <button type="submit" class="btn btn-primary">Enviar a Power Automate</button>
+  </form>
+  <!-- JS -->
+  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.18/summernote-bs4.min.js"></script>
+  <script>
+    $('#contenido').summernote({
+      height: 200
+    });
+    document.getElementById('formulario').addEventListener('submit', function (e) {
+      e.preventDefault();
+      const contenidoHTML = $('#contenido').summernote('code');
+      fetch('https://prod-129.westus.logic.azure.com:443/workflows/120096329afb44f092e4d926620d11e9/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=jClunr0-M4y-GECTcu-aKUsaeSUnOuhqB64SiKwTp70', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify({ contenido: contenidoHTML })
+})
+.then(response => {
+  console.log('Código de respuesta:', response.status);
+  return response.text().then(text => {
+    console.log('Texto devuelto:', text);
+    if (response.ok) {
+      alert('Enviado correctamente a Power Automate.');
+    } else {
+      alert('Error al enviar. Código: ' + response.status + ' → ' + text);
+    }
+  });
+})
+.catch(error => {
+  console.error('Error en fetch:', error);
+  alert('Error de red: ' + error.message);
+});
+    });
+  </script>
+</body>
+</html>
+'CONTEXTO INSTITUCIONAL DE LA UNIVERSIDAD SANTIAGO DE CALI',
+  'DENOMINACIÓN',
+  'ANTECEDENTES DEL PROGRAMA',
+  'CONCEPCIÓN Y NATURALEZA DEL PROGRAMA',
+  'Misión del Programa',
+  'Visión del Programa',
+  'Objetivo General del Programa',
+  'Objetivos específicos',
+  'GENERALIDADES DEL PROGRAMA',
+  'RELACIÓN DE LA ESTRUCTURA CURRICULAR CON LA DENOMINACIÓN DEL PROGRAMA',
+  'JUSTIFICACIÓN',
+  'ESTADO DE LA OFERTA DE EDUCACIÓN DEL ÁREA DEL PROGRAMA',
+  'Estado actual a nivel Nacional',
+  'Estado actual a nivel internacional',
+  'NECESIDADES DE LA REGIÓN Y EL PAÍS',
+  'Pertinencia e Impacto del Programa',
+  'Oportunidades de Desempeño y Tendencias del ejercicio profesional',
+  'Inscritos, admitidos y matriculados en primer semestre',
+  'Matriculados y graduados',
+  'Deserción y permanencia',
+  'Estímulos y beneficios',
+  'ATRIBUTOS QUE CONSTITUYEN LOS RASGOS DISTINTIVOS DEL PROGRAMA',
+  'ASPECTOS CURRICULARES',
+  'COMPONENTES FORMATIVOS',
+  'Plan general de estudios',
+  'Plan de Transición',
+  'Perfiles',
+  'Resultados de aprendizaje',
+  'Estrategias para la formación integral',
+  'Estrategias de flexibilización para el desarrollo del programa',
+  'Propósitos de Formación',
+  'COMPONENTES PEDAGÓGICOS',
+  'COMPONENTES DE INTERACCIÓN',
+  'Resultados de los mecanismos de interacción de estudiantes y profesores',
+  'Actividades académicas que favorecen la internacionalización',
+  'CONCEPTUALIZACIÓN TEÓRICA Y EPISTEMOLÓGICA DEL PROGRAMA',
+  'MECANISMOS DE EVALUACIÓN',
+  'ORGANIZACIÓN DE LAS ACTIVIDADES ACADÉMICAS Y PROCESO FORMATIVO',
+  'DISEÑO Y CONTENIDO CURRICULAR',
+  'PROCESO FORMATIVO',
+  'ESTRATEGIAS DIDÁCTICAS PARA EL DESARROLLO DE ACTIVIDADES ACADÉMICAS',
+  'Estrategias y Técnicas Cognitivas',
+  'Estrategias y técnicas metacognitivas',
+  'Estrategias y Técnicas Integradoras',
+  'Recursos Tecnológicos',
+  'REQUISITOS DE TITULACIÓN',
+  'INVESTIGACIÓN, INNOVACIÓN Y/O CREACIÓN ARTÍSTICA Y CULTURAL',
+  'LA INVESTIGACIÓN EN LA USC',
+  'Marco Normativo para la Investigación en la USC',
+  'Recursos institucionales para la investigación',
+  'Medios para la difusión de los resultados de investigación',
+  'FORMACIÓN EN INVESTIGACIÓN',
+  'Áreas, líneas o temáticas de la investigación',
+  'Grupos de investigación',
+  'Investigadores categorizados',
+  'Formación de pensamiento innovador',
+  'INCORPORACIÓN DE LA INVESTIGACIÓN EN EL DESARROLLO DEL CONOCIMIENTO,',
+  'Desarrollo de productos',
+  'Resultados de la investigación en el programa',
+  'Proyectos de Investigación',
+  'Publicaciones',
+  'Ponencias Nacionales e Internacionales',
+  'Participación en Redes Académicas',
+  'Programas de Jóvenes Investigadores Santiaguinos (JIS)',
+  'Semilleros de Investigación',
+  'Publicaciones de los estudiantes',
+  'Ponencias de los estudiantes',
+  'Pasantías de investigación de profesores y estudiantes',
+  'Estancias posdoctorales',
+  'Otras',
+  'APORTES DE LA INVESTIGACIÓN AL DESARROLLO DE LOS SECTORES PRODUCTIVOS Y DE SERVICIOS DE LA REGIÓN Y DEL PAÍS',
+  'PLAN PARA EL LOGRO DEL AMBIENTE DE INVESTIGACIÓN EN EL PROGRAMA',
+  'RELACIÓN CON EL SECTOR EXTERNO',
+  'LA EXTENSIÓN EN LA UNIVERSIDAD SANTIAGO DE CALI',
+  'RELACIÓN DEL PROGRAMA CON EL SECTOR EXTERNO',
+  'Vinculación con el Sector Productivo, social, cultural, público y privado',
+  'ARTICULACIÓN DE PROFESORES Y ESTUDIANTES CON DINÁMICA SOCIAL, PRODUCTIVA, CREATIVA Y CULTURAL',
+  'Plan de relación con el sector externo',
+  'PROFESORES',
+  'ESTRUCTURA DE LA ORGANIZACIÓN DOCENTE',
+  'Modalidades de contratación docente',
+  'SUFICIENCIA DE LOS PROFESORES',
+  'Vinculación de los profesores',
+  'Plan de vinculación',
+  'IDONEIDAD DE LOS PROFESORES',
+  'DISPONIBILIDAD DE LOS PROFESORES',
+  'PERMANENCIA Y DESARROLLO DE LOS PROFESORES',
+  'Permanencia de los profesores',
+  'Política de incentivos',
+  'Becas institucionales para los profesores y beneficiarios',
+  'Periodos sabáticos',
+  'Evaluación de los profesores',
+  'Desarrollo de los profesores',
+  'Becas para estudios de Posgrado en otras instituciones',
+  'Comisiones de estudio',
+  'Rutas de Formación Docente',
+  'Reconocimientos',
+  'Plan de desarrollo y capacitación de los profesores',
+  'MEDIOS EDUCATIVOS',
+  'DOTACIÓN DE LOS AMBIENTES FÍSICOS Y/O VIRTUALES',
+  'Equipos de cómputo y software',
+  'Servicios ofrecidos a la comunidad Académica',
+  'Equipos de cómputo y aplicativos informáticos',
+  'Salas de Sistemas',
+  'Plataformas tecnológicas',
+  'Sistema Integrado de Gestión SIGUSC',
+  'Sistema de información para el Aseguramiento de la Calidad SIPAC',
+  'Plataforma Tecnológica para ambientes virtuales',
+  'Uso de la plataforma virtual en el programa',
+  'Herramientas y funciones de la plataforma virtual',
+  'Creación de recursos digitales',
+  'Seguridad de la información',
+  'Recursos bibliográficos físicos y digitales',
+  'Servicios virtuales disponibles',
+  'Convenios Interbibliotecarios',
+  'Material bibliográfico existente',
+  'Bases de datos y recursos digitales',
+  'Laboratorios',
+  'Laboratorios utilizados por el programa',
+  'Mantenimiento, actualización y reposición',
+  'Disponibilidad y accesibilidad a los medios educativos',
+  'Plan de adquisición, construcción o préstamo de los medios educativos',
+  'MECANISMOS DE CAPACITACIÓN Y APROPIACIÓN',
+  'Capacitación Biblioteca',
+  'Capacitación ambientes virtuales',
+  'Capacitación en XXXXX',
+  'ESTRATEGIAS QUE IMPLEMENTA EL PROGRAMA PARA ATENDER LAS BARRERAS DE ACCESO Y CARACTERÍSTICAS DE LA POBLACIÓN',
+  'MEDIOS EDUCATIVOS DISPONIBLES SEGÚN LA MODALIDAD DEL PROGRAMA, EN LOS CENTROS DE TUTORÍA, PRÁCTICAS O TALLERES',
+  'CONVENIOS DE PRÁCTICA',
+  'EVALUACIÓN Y SEGUIMIENTO AL USO, DISPONIBILIDAD Y PERTINENCIA DE LOS MEDIOS EDUCATIVOS A TRAVÉS DE CONVENIOS O CONTRATOS',
+  'INFRAESTRUCTURA FÍSICA Y TECNOLÓGICA',
+  'INFRAESTRUCTURA DE LA UNIVERSIDAD',
+  'CARACTERÍSTICAS DE LA INFRAESTRUCTURA FÍSICA Y TECNOLÓGICA',
+  'Descripción y justificación de la cantidad, calidad y capacidad de espacios',
+  'Infraestructura de Bienestar',
+  'Servicios de Bienestar Universitario',
+  'Proceso de asignación de la infraestructura física y tecnológica',
+  'Proyección de la infraestructura física y tecnológica',
+  'Proyección Financiera',
+  'DISPONIBILIDAD Y ACCESO A LA INFRAESTRUCTURA FÍSICA Y TECNOLÓGICA',
+  'Disponibilidad y participación infraestructura de Bienestar',
+  'Disponibilidad y uso de audiovisuales, salas de sistemas, laboratorios o salas ZOOM',
+  'Disponibilidad y uso de la infraestructura para la Educación Virtual',
+  'Planes de mantenimiento de la infraestructura física',
+  'CONDICIONES INSTITUCIONALES',
+  'REFERENCIAS BIBLIOGRÁFICAS'

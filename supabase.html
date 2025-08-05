@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Subir y Ver PDF desde Supabase</title>
+</head>
+<body>
+  <h2>📤 Subir archivo PDF</h2>
+  <input type="file" id="fileInput" accept="application/pdf">
+  <button id="btnSubir">Subir a Supabase</button>
+
+  <h2>📄 Visor del PDF</h2>
+  <iframe id="visorPDF" style="width:100%; height:600px;" frameborder="0"></iframe>
+
+  <script type="module">
+    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm'
+
+    const supabaseUrl = 'https://lxlmoylexavqxnhxdhbz.supabase.co';
+    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx4bG1veWxleGF2cXhuaHhkaGJ6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTAxOTAxNzksImV4cCI6MjA2NTc2NjE3OX0.sYqG2AvlrsdRQaC5i4CsTzWwDt1n9AzYsViZelyZDZ4';
+    const supabase = createClient(supabaseUrl, supabaseKey);
+
+    async function subirArchivo() {
+      const file = document.getElementById('fileInput').files[0];
+      if (!file) return alert('Selecciona un archivo PDF');
+
+      const nombre = prompt("Nombre para el archivo (sin espacios):");
+      if (!nombre) return;
+
+      const ruta = `pdfs/${nombre}.pdf`;
+
+      const { error } = await supabase.storage.from('documentos').upload(ruta, file, {
+        cacheControl: '3600',
+        upsert: true
+      });
+
+      if (error) {
+        console.error(error);
+        alert("❌ Error al subir");
+      } else {
+        const { data } = supabase.storage.from('documentos').getPublicUrl(ruta);
+        document.getElementById('visorPDF').src = data.publicUrl;
+        alert("✅ Subido correctamente");
+      }
+    }
+
+    document.getElementById('btnSubir').addEventListener('click', subirArchivo);
+  </script>
+</body>
+</html>

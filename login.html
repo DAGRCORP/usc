@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Inicio de sesión</title>
+  <link rel="stylesheet" href="estilos.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+</head>
+<body>
+  <div class="login-container">
+    <h2>Iniciar sesión</h2>
+    <input id="email" type="email" placeholder="Correo electrónico" required>
+    <input id="password" type="password" placeholder="Contraseña" required>
+    <div style="margin-top:12px;">
+      <a href="#" id="recuperarLink" style="color:#2069b4;font-size:1em;">¿Olvidaste tu contraseña?</a>
+    </div>    
+    <button id="loginBtn">Ingresar</button>
+    <div id="loginMsg" style="color:red;margin-top:10px;"></div>
+  </div>
+  <script src="login.js"></script>
+</body>
+</html>

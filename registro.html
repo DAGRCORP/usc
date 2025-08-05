@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Registro de usuario</title>
+  <link rel="stylesheet" href="estilos.css" />
+</head>
+<body>
+  <div class="registro-container">
+    <h2>Registro de usuario</h2>
+    <form id="registroForm">
+      <input type="text" id="nombre" placeholder="Nombre" required /><br>
+      <input type="text" id="apellido" placeholder="Apellido" required /><br>
+      <input type="email" id="correo" placeholder="Correo" required /><br>
+      <select id="rol" required>
+        <option value="" disabled selected>Selecciona un rol</option>
+        <option value="admin">Administrador</option>
+        <option value="editor">Editor</option>
+        <option value="revisor">Revisor</option>
+      </select><br>
+      <input type="password" id="password" placeholder="Contraseña" required /><br>
+      <button type="submit">Registrar</button>
+    </form>
+    <div id="mensaje"></div>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+
+  <script src="registro.js"></script>
+</body>
+</html>

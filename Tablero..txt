@@ -1,0 +1,4 @@
+Tablero.
+ver estado de avance de documento por operaciones que se realizan, resumen, secciones listas, aprobadas cuantas no.
+se pueda ver en una pantalla.
+poder ver como está el proceso del documento.

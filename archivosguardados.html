@@ -10,43 +10,34 @@
   <!-- Barra de navegación -->
   <div id="nav-placeholder"></div>
 
-  <h1 class="folder-title">📁 Gestión de Archivos</h1>
+  <h2 style="margin-top: 3rem; color: #003366;">📁 Explorador de Archivos</h2>
+  <div style="margin-top: 2rem;">
+    <button id="btnNuevoPrograma" class="btn-crear">➕ Añadir nuevo programa</button>
+  </div> 
+<div id="explorador" style="display: flex; flex-wrap: wrap; gap: 1rem;"></div>
 
-  <table class="tabla-archivos">
-    <thead>
-      <tr>
-        <th>Nombre</th>
-        <th>Fecha</th>
-        <th>Cargar</th>
-        <th>Eliminar</th>
-      </tr>
-    </thead>
-    <tbody id="listaArchivos"></tbody>
+<h3 id="tituloCarpeta" style="margin-top: 2rem; color: #003366;"></h3>
+<div id="archivosEnCarpeta" class="fila-archivos"></div>
+<table id="tabla-archivos" class="tabla-archivos">
+  <thead>
+    <tr>
+      <th>Nombre</th>
+      <th>Tipo</th>
+      <th>Fecha</th>
+      <th>Acciones</th>
+    </tr>
+  </thead>
+  <tbody id="listaArchivos">
+    <!-- Filas serán inyectadas -->
+  </tbody>
+</table>"listaArchivos"></tbody>
   </table>
-
-  <!-- Firebase SDK (módulo) -->
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.0/firebase-app.js";
-    import { getFirestore } from "https://www.gstatic.com/firebasejs/11.9.0/firebase-firestore.js";
-
-    const firebaseConfig = {
-      apiKey: "AIzaSyDwg08RKcye5liZvwgkb7L5AvkCcUpAr1E",
-      authDomain: "archivos-bf049.firebaseapp.com",
-      projectId: "archivos-bf049",
-      storageBucket: "archivos-bf049.appspot.com",
-      messagingSenderId: "713944158434",
-      appId: "1:713944158434:web:9657301a630ce703184ebb"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
-    window.db = db;
-  </script>
-
+  <iframe id="visorPDF" class="visor-pdf" frameborder="0" style="display:none"></iframe>
+  <pre id="visorJSON" style="display:none;background:#1a2132;color:#fff;padding:1em;overflow-x:auto;border-radius:7px;margin-top:1em;"></pre>
   <!-- Lógica del gestor de archivos -->
   <script type="module" src="filemanager.js"></script>
-
   <!-- Carga de barra de navegación -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
   <script src="nav.js"></script>
 </body>
 </html>

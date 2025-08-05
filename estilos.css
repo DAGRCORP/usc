@@ -128,31 +128,31 @@ button:hover {
   background-color: #005f26;
 }
 .main-nav {
-  background-color: #003366;
-  padding: 1rem;
-  margin-bottom: 0;
-  position: fixed;
-  top: 0;
-  left: 0;
+  background: #083366 !important;
+  color: #fff !important;
   width: 100%;
+  position: relative;
+  top: 0; left: 0;
+  margin: 0 !important;
+  padding: 0 !important;
+  border-radius: 0 !important;
   z-index: 1000;
+  min-height: 48px;
+  box-shadow: 0 1px 10px #0001;
 }
 .main-nav ul {
-  list-style: none;
-  display: flex;
-  justify-content: center;
-  gap: 2rem;
-  padding: 0;
-  margin: 0;
+  margin: 0; padding: 0;
+  display: flex; justify-content: center; align-items: center;
+  height: 48px; list-style: none;
 }
+.main-nav li { margin: 0 20px; }
 .main-nav a {
-  color: white;
-  text-decoration: none;
-  font-weight: bold;
+  color: #fff !important;
+  font-weight: 600; font-size: 1.1em;
+  text-decoration: none; display: flex; align-items: center;
+  height: 48px; transition: color 0.16s;
 }
-.main-nav a:hover {
-  text-decoration: underline;
-}
+.main-nav a:hover { color: #ffe04b !important; }
 /* 1) Oculta todas las secciones */
 .step {
   display: none;
@@ -215,10 +215,11 @@ section.step {
 }
 /*estilos del archivos*/
 body.filemgr-page {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background-color: #f4f4f9;
+  padding: 0;
+  background: #f6f6fb;
+  min-height: 100vh;
 }
+
 
 .filemgr-page .sidebar h2 {
   margin-top: 0;
@@ -384,23 +385,26 @@ img {
 .tabla-archivos {
   width: 100%;
   border-collapse: collapse;
-  margin-top: 1rem;
-  background-color: #fff;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  background: #fff;
+  margin: 1.5rem 0;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+  font-size: 1.03em;
 }
-
-.tabla-archivos th,
-.tabla-archivos td {
-  border: 1px solid #ddd;
-  padding: 12px;
+.tabla-archivos th, .tabla-archivos td {
+  border: 1px solid #23507e;
+  padding: 0.8em 1.2em;
   text-align: left;
 }
-
-.tabla-archivos th {
-  background-color: #003366;
-  color: white;
+.tabla-archivos thead th {
+  background: #08386e;
+  color: #fff;
+  font-size: 1.08em;
 }
-
+.tabla-archivos tr:hover {
+  background: #f4faff;
+}
 .tabla-archivos td button {
   background-color: #00509e;
   color: white;
@@ -412,6 +416,20 @@ img {
 
 .tabla-archivos td button:hover {
   background-color: #002f6c;
+}
+.boton-tabla {
+  border: none;
+  padding: 0.5em 1em;
+  border-radius: 7px;
+  background: #2069b4;
+  color: #fff;
+  cursor: pointer;
+  font-weight: 600;
+  margin: 0 0.2em;
+  transition: background 0.2s;
+}
+.boton-tabla:hover {
+  background: #08386e;
 }
 .btn-enviar {
   background-color: green;
@@ -425,4 +443,92 @@ img {
 }
 .btn-enviar:hover {
   background-color: #005f26;
+}
+.fila-archivos {
+  display: flex;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  gap: 1rem;
+  padding: 1rem 0;
+}
+.fila-detalles {
+  background: #f8fafd;
+  font-size: 0.95em;
+}
+.tarjeta-archivo {
+  min-width: 200px;
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.08);
+  padding: 1rem;
+  text-align: center;
+  flex-shrink: 0;
+  transition: transform 0.2s;
+}
+
+.tarjeta-archivo:hover {
+  transform: translateY(-3px);
+}
+
+.tarjeta-archivo strong {
+  display: block;
+  font-size: 0.95rem;
+  margin-bottom: 0.5rem;
+  color: #003366;
+}
+
+.tarjeta-archivo button,
+.tarjeta-archivo a {
+  display: block;
+  margin-top: 0.5rem;
+  text-decoration: none;
+  font-size: 0.85rem;
+}
+
+.tarjeta-archivo a {
+  color: #00509e;
+  font-weight: bold;
+}
+
+.visor-pdf {
+  width: 100%;
+  height: 70vh;
+  border: 2px solid #aaa;
+  border-radius: 8px;
+  margin: 2rem 0 1rem 0;
+  background: #f5f5f5;
+  display: block;
+}
+
+.btn-crear {
+  background-color: #007a33;
+  color: white;
+  border: none;
+  padding: 0.6rem 1.2rem;
+  border-radius: 6px;
+  font-size: 1rem;
+  cursor: pointer;
+}
+.btn-crear:hover {
+  background-color: #005f26;
+}
+.bloque-seccion {
+  margin-bottom: 2rem;
+  border: 1px solid #e4e4e4;
+  border-radius: 7px;
+  padding: 1.2rem;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  gap: 0.7em;
+  max-width: 950px;
+}
+.bloque-seccion button {
+  align-self: flex-start;
+}
+.aviso-edicion {
+  margin-left: 1em;
+  color: #d47a09;
+  font-weight: 600;
 }

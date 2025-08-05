@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Editor TipTap Manual - Botones personalizados</title>
+  <script type="module">
+    import { Editor } from 'https://esm.sh/@tiptap/core'
+    import StarterKit from 'https://esm.sh/@tiptap/starter-kit'
+    import Underline from 'https://esm.sh/@tiptap/extension-underline'
+    import Link from 'https://esm.sh/@tiptap/extension-link'
+    import Image from 'https://esm.sh/@tiptap/extension-image'
+    import TextStyle from 'https://esm.sh/@tiptap/extension-text-style'
+    import Color from 'https://esm.sh/@tiptap/extension-color'
+    import FontFamily from 'https://esm.sh/@tiptap/extension-font-family'
+    import { Table } from 'https://esm.sh/@tiptap/extension-table'
+    import { TableRow } from 'https://esm.sh/@tiptap/extension-table-row'
+    import { TableCell } from 'https://esm.sh/@tiptap/extension-table-cell'
+    import { TableHeader } from 'https://esm.sh/@tiptap/extension-table-header'
+    import Collaboration from 'https://esm.sh/@tiptap/extension-collaboration'
+    import * as Y from 'https://esm.sh/yjs'
+    import { WebsocketProvider } from 'https://esm.sh/y-websocket'
+
+    const ydoc = new Y.Doc()
+    const provider = new WebsocketProvider('ws://localhost:1234', 'tiptap-avanzado', ydoc)
+
+    const editor = new Editor({
+      element: document.querySelector('#editor'),
+      extensions: [
+        StarterKit,
+        Underline,
+        Link,
+        Image,
+        TextStyle,
+        Color,
+        FontFamily,
+        Table.configure({ resizable: true }),
+        TableRow,
+        TableHeader,
+        TableCell,
+        Collaboration.configure({ document: ydoc })
+      ],
+      content: '<p>Escribe aquí...</p>',
+    });
+
+    const commands = {
+      bold: () => editor.chain().focus().toggleBold().run(),
+      italic: () => editor.chain().focus().toggleItalic().run(),
+      underline: () => editor.chain().focus().toggleUnderline().run(),
+      heading: () => editor.chain().focus().toggleHeading({ level: 2 }).run(),
+      bullet: () => editor.chain().focus().toggleBulletList().run(),
+      undo: () => editor.chain().focus().undo().run(),
+      redo: () => editor.chain().focus().redo().run(),
+      link: () => {
+        const url = prompt('URL:')
+        if (url) editor.chain().focus().toggleLink({ href: url }).run()
+      },
+      image: () => {
+        const url = prompt('URL de la imagen:')
+        if (url) editor.chain().focus().setImage({ src: url }).run()
+      },
+      color: () => {
+        const color = prompt('Color (hex o nombre):')
+        if (color) editor.chain().focus().setColor(color).run()
+      },
+      font: () => {
+        const font = prompt('Nombre de fuente (ej: Arial, Courier):')
+        if (font) editor.chain().focus().setFontFamily(font).run()
+      },
+      table: () => editor.chain().focus().insertTable({ rows: 3, cols: 3, withHeaderRow: true }).run(),
+    }
+
+    Object.entries(commands).forEach(([id, fn]) => {
+      const btn = document.getElementById(id)
+      if (btn) btn.addEventListener('click', fn)
+    })
+  </script>
+
+  <style>
+    body {
+      font-family: sans-serif;
+      background: #f9f9f9;
+    }
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 1rem;
+      background: #fff;
+      border-bottom: 1px solid #ddd;
+    }
+    .toolbar button {
+      padding: 0.4rem 0.8rem;
+      border: 1px solid #ccc;
+      background: #eee;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    #editor {
+      max-width: 900px;
+      margin: 2rem auto;
+      background: #fff;
+      border: 1px solid #ccc;
+      padding: 1.2rem;
+      border-radius: 8px;
+      min-height: 300px;
+    }
+  </style>
+</head>
+<body>
+  <div class="toolbar">
+    <button id="bold">B</button>
+    <button id="italic"><i>I</i></button>
+    <button id="underline"><u>U</u></button>
+    <button id="heading">H2</button>
+    <button id="bullet">Lista</button>
+    <button id="undo">↶</button>
+    <button id="redo">↷</button>
+    <button id="link">🔗 Enlace</button>
+    <button id="image">🖼️ Imagen</button>
+    <button id="color">🎨 Color</button>
+    <button id="font">🔤 Fuente</button>
+    <button id="table">📊 Tabla</button>
+  </div>
+
+  <div id="editor"></div>
+</body>
+</html>

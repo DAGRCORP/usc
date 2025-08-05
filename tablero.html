@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Tablero de Estado del Documento</title>
+  <link rel="stylesheet" href="estilos.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+  <style>
+    .container {
+      max-width: 95%;
+      margin: 20px auto;
+    }
+    #resumen {
+      font-size: 1.1em;
+      margin-bottom: 20px;
+    }
+    table.tabla-archivos {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.95em;
+    }
+    table.tabla-archivos th,
+    table.tabla-archivos td {
+      border: 1px solid #ccc;
+      padding: 10px;
+      vertical-align: top;
+      text-align: left;
+    }
+    table.tabla-archivos th {
+      background-color: #f4f4f4;
+    }
+    table.tabla-archivos td:nth-child(4) {
+      width: 40%;
+      white-space: pre-wrap;
+    }
+    .estado-final {
+      margin-top: 2em;
+      padding: 1em;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      background-color: #fafafa;
+    }
+    .estado-final h2 {
+      margin-top: 0;
+    }
+    .etapa {
+      margin-bottom: 0.5em;
+      display: flex;
+      align-items: center;
+      gap: 0.6em;
+      font-size: 1em;
+    }
+    .etapa .icono {
+      font-size: 1.2em;
+      min-width: 24px;
+    }
+    .etapa.verde { color: #2e7d32; }
+    .etapa.azul { color: #1565c0; }
+    .etapa.amarillo { color: #f9a825; }
+    .etapa.rojo { color: #c62828; }
+  </style>
+</head>
+<body class="filemgr-page">
+  <div id="nav-placeholder"></div>
+  <div class="container">
+    <h1 style="text-align:left; margin-bottom: 1em;">📊 Tablero de Estado del Documento</h1>
+    <div id="resumen"></div>
+    <div id="tablaEstado"></div>
+    <div id="estadoFinal" class="estado-final"></div>
+  </div>
+  <script type="module" src="tablero.js"></script>
+  <script src="nav.js"></script>
+</body>
+</html>
